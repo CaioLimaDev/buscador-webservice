@@ -2,9 +2,10 @@ package com.br.buscador.produto.entity;
 
 import com.br.buscador.categorias.entity.CategoriasDTO;
 import com.br.buscador.mercado.entity.MercadoDTO;
+import com.br.buscador.util.pagination.PageQuery;
 import jakarta.ws.rs.QueryParam;
 
-public class ProdutoFilter{
+public class ProdutoFilter extends PageQuery {
 
     @QueryParam("nomeProduto")
     private String nomeProduto;

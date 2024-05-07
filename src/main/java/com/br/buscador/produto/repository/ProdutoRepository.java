@@ -5,10 +5,10 @@ import com.br.buscador.produto.entity.ProdutoFilter;
 import com.br.buscador.util.pagination.Paginado;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
@@ -29,8 +29,15 @@ public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer>
         parametros.put("precoProduto", produtoFilter.getPrecoProduto());
         parametros.put("categoria", produtoFilter.getCategoria());
 
+        Page page = new Page(produtoFilter.page, produtoFilter.pageSize);
         PanacheQuery<Produto> produtos = find(query.toString(), parametros);
 
+        Paginado<Produto> resultado = new Paginado<>();
+        resultado.result = produtos.page(page).list();
+        resultado.pageTotal = produtos.pageCount();
+        resultado.page = page.index;
+        resultado.pageSize = page.size;
 
+        return resultado;
     }
 }
