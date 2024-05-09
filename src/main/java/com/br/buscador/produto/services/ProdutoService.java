@@ -13,5 +13,5 @@ public interface ProdutoService {
 
     Paginado<ProdutoDTO> buscarProdutosFiltrados(ProdutoFilter produtoFilter);
 
-    Response salvarProdutos(List<FileUpload> fileUpload) throws IOException;
+
 }

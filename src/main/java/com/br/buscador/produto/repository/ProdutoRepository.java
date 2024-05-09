@@ -1,5 +1,7 @@
 package com.br.buscador.produto.repository;
 
+import com.br.buscador.categorias.entity.CategoriaMapper;
+import com.br.buscador.mercado.entity.MercadoMapper;
 import com.br.buscador.produto.entity.Produto;
 import com.br.buscador.produto.entity.ProdutoFilter;
 import com.br.buscador.util.pagination.Paginado;
@@ -7,6 +9,8 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.mapstruct.factory.Mappers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +18,11 @@ import java.util.StringJoiner;
 
 @ApplicationScoped
 public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer> {
+
+    @Inject
+    MercadoMapper mercadoMapper;
+
+    private final CategoriaMapper categoriaMapper = Mappers.getMapper(CategoriaMapper.class);
 
     public Paginado<Produto> filtrarProdutos(ProdutoFilter produtoFilter){
         StringJoiner query = new StringJoiner(" ");
@@ -25,9 +34,9 @@ public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer>
 
         Map<String,Object> parametros = new HashMap<>();
         parametros.put("nomeProduto", produtoFilter.getNomeProduto());
-        parametros.put("mercado", produtoFilter.getMercado());
+        parametros.put("mercado", mercadoMapper.paraEntidade(produtoFilter.getMercado()));
         parametros.put("precoProduto", produtoFilter.getPrecoProduto());
-        parametros.put("categoria", produtoFilter.getCategoria());
+        parametros.put("categoria", produtoFilter.getCategoria() != null ? categoriaMapper.paraEntidade(produtoFilter.getCategoria()) : null);
 
         Page page = new Page(produtoFilter.page, produtoFilter.pageSize);
         PanacheQuery<Produto> produtos = find(query.toString(), parametros);

@@ -40,17 +40,4 @@ public class ProdutoServiceImpl implements ProdutoService{
                 .map(produto -> produtoMapper.paraDTO(produto,categoriaMapper,mercadoMapper))
                 .collect(Collectors.toList()));
     }
-
-    @Override
-    public Response salvarProdutos(List<FileUpload> fileUpload) throws IOException {
-
-        InputStream inputStream = new FileInputStream(fileUpload.get(0).toString());
-
-        Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
-        LeitorDeCsv leitorDeCsv = new LeitorDeCsv();
-
-        produtoRepository.persist(produtoMapper.paraListaDeEntidades(leitorDeCsv.lerCsv(csvParser)));
-        return Response.ok().build();
-    }
 }

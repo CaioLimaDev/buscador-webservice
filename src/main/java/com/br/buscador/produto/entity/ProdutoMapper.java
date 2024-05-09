@@ -12,6 +12,8 @@ public interface ProdutoMapper {
     List<Produto> paraListaDeEntidades(List<ProdutoDTO> produtoDTO);
     Produto paraEntidade(ProdutoDTO produtoDTO);
 
+    List<ProdutoDTO> paraListaDeDTO(List<Produto> produtos);
+
     default ProdutoDTO paraDTO(Produto produto, CategoriaMapper categoriaMapper, MercadoMapper mercadoMapper){
 
         ProdutoDTO produtoDTO = new ProdutoDTO();

@@ -1,35 +1,68 @@
 package com.br.buscador.util.leitura;
 
-import com.br.buscador.categorias.entity.CategoriasDTO;
+import com.br.buscador.categorias.entity.CategoriaMapper;
 import com.br.buscador.mercado.entity.MercadoDTO;
 import com.br.buscador.produto.entity.ProdutoDTO;
+import com.br.buscador.mercado.entity.Mercado;
+import com.br.buscador.produto.entity.Produto;
+import com.br.buscador.categorias.entity.CategoriasDTO;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LeitorDeCsv {
 
-    public List<ProdutoDTO>lerCsv(CSVParser csvParser){
-        List<ProdutoDTO> listaProdutosDTO = new ArrayList<>();
+    public Map<MercadoDTO, List<ProdutoDTO>> lerCsv(CSVParser csvParser) {
+        Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap = new HashMap<>();
         for (CSVRecord record : csvParser) {
             ProdutoDTO produtoDTO = new ProdutoDTO();
-            produtoDTO.setNomeProduto(record.get("NomeProduto"));
-            produtoDTO.setPrecoProduto(Double.parseDouble(record.get("PrecoProduto")));
+            produtoDTO.setNomeProduto(record.get("nome"));
+            produtoDTO.setPrecoProduto(Double.parseDouble(record.get("preco")));
+            produtoDTO.setImagem(record.get("imagemProduto"));
 
             MercadoDTO mercadoDTO = new MercadoDTO();
-            mercadoDTO.setLogo(record.get("LogoMercado"));
-            mercadoDTO.setNome(record.get("Nome"));
-            produtoDTO.setMercado(mercadoDTO);
+            mercadoDTO.setLogo(record.get("imagemMercado"));
+            mercadoDTO.setNome(record.get("mercadoVinculado"));
 
             CategoriasDTO categoriasDTO = new CategoriasDTO();
-            categoriasDTO.setDescricao(record.get("DescricaoCategoria"));
+            categoriasDTO.setDescricao(record.get("categoriaVinculada"));
             produtoDTO.setCategoria(categoriasDTO);
 
-            listaProdutosDTO.add(produtoDTO);
+            if (!mercadoProdutoMap.containsKey(mercadoDTO)) {
+                mercadoProdutoMap.put(mercadoDTO, new ArrayList<>());
+            }
+            mercadoProdutoMap.get(mercadoDTO).add(produtoDTO);
         }
-        return listaProdutosDTO;
+        return mercadoProdutoMap;
     }
 
+    public List<Mercado> criarMercados(Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap, CategoriaMapper categoriaMapper) {
+        List<Mercado> mercados = new ArrayList<>();
+        for (Map.Entry<MercadoDTO, List<ProdutoDTO>> entry : mercadoProdutoMap.entrySet()) {
+            Mercado mercado = new Mercado();
+            MercadoDTO mercadoDTO = entry.getKey();
+            mercado.setNome(mercadoDTO.getNome());
+            mercado.setLogo(mercadoDTO.getLogo());
+
+            List<ProdutoDTO> produtoDTOList = entry.getValue();
+            List<Produto> produtos = new ArrayList<>();
+
+            for (ProdutoDTO produtoDTO : produtoDTOList) {
+                Produto produto = new Produto();
+                produto.setNomeProduto(produtoDTO.getNomeProduto());
+                produto.setPrecoProduto(produtoDTO.getPrecoProduto());
+                produto.setImagem(produtoDTO.getImagem());
+                produto.setCategoria(categoriaMapper.paraEntidade(produtoDTO.getCategoria()));
+                produto.setMercado(mercado);
+                produtos.add(produto);
+            }
+            mercado.setProdutos(produtos);
+            mercados.add(mercado);
+        }
+        return mercados;
+    }
 }

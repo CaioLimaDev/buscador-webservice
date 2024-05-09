@@ -6,4 +6,5 @@ import org.mapstruct.Mapper;
 public interface CategoriaMapper {
 
     CategoriasDTO paraDTO(Categorias categorias);
+    Categorias paraEntidade(CategoriasDTO categoriasDTO);
 }

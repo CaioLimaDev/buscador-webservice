@@ -1,17 +1,14 @@
 package com.br.buscador.produto.rest;
 
+import com.br.buscador.produto.entity.ProdutoDTO;
+import com.br.buscador.produto.entity.ProdutoFilter;
 import com.br.buscador.produto.services.ProdutoService;
-import io.vertx.ext.web.FileUpload;
+import com.br.buscador.util.pagination.Paginado;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.reactive.RestForm;
-
-import java.io.FileInputStream;
-import java.util.List;
 
 @Path("/produtos")
 public class ProdutoRest {
@@ -21,19 +18,13 @@ public class ProdutoRest {
 
     @GET
     @Path("/")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response inserirProdutos(@RestForm("fileUpload") List<FileUpload> fileUploads) {
-
-            fileUploads.forEach(fileUpload -> {
-                String arquivo = fileUpload.toString();
-                try {
-                    FileInputStream streamFile = new FileInputStream(arquivo);
-                    produtoService.salvarProdutos(fileUploads);
-                }catch (Exception e){
-                    throw new RuntimeException(e);
-                }
-            });
-
-            return Response.ok().build();
+    public Response filtrarProduto(@BeanParam ProdutoFilter produtoFilter){
+        Paginado<ProdutoDTO> produtos = produtoService.buscarProdutosFiltrados(produtoFilter);
+        if(produtos.result.isEmpty()){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"mensagem\":\"Não foi possível encontrar o produto\"}")
+                    .build();
+        }
+        return Response.ok(produtos).build();
     }
 }
