@@ -1,6 +1,6 @@
 package com.br.buscador.produto.entity;
 
-import com.br.buscador.categorias.entity.Categorias;
+
 import com.br.buscador.mercado.entity.Mercado;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -20,11 +20,20 @@ public class Produto extends PanacheEntityBase {
     private Mercado mercado;
     @Column(name = "PRECO_PRODUTO")
     private Double precoProduto;
-    @ManyToOne
-    @JoinColumn(name = "CATEGORIA_PRODUTO")
-    private Categorias categoria;
+    @Column(name = "UNIDADE_MEDIDA")
+    private String unidadeMedida;
+    @Column(name = "CATEGORIA_PRODUTO")
+    private String categoria;
     @Column(name = "IMAGEM_PRODUTO")
     private String imagem;
+
+    public String getUnidadeMedida() {
+        return unidadeMedida;
+    }
+
+    public void setUnidadeMedida(String unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
+    }
 
     public Integer getId() {
         return id;
@@ -58,11 +67,11 @@ public class Produto extends PanacheEntityBase {
         this.precoProduto = precoProduto;
     }
 
-    public Categorias getCategoria() {
+    public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categorias categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 

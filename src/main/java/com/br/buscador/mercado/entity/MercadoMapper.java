@@ -1,7 +1,6 @@
 package com.br.buscador.mercado.entity;
 
-import com.br.buscador.categorias.entity.CategoriaMapper;
-import com.br.buscador.produto.entity.ProdutoMapper;
+
 import org.mapstruct.Mapper;
 
 import java.util.List;

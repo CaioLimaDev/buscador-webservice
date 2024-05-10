@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "MERCADOS", schema = "dbo")
+@Table(name = "MERCADO", schema = "dbo")
 public class Mercado extends PanacheEntityBase {
 
     @Id
@@ -18,7 +18,7 @@ public class Mercado extends PanacheEntityBase {
     private String nome;
     @Column(name = "LOGO_MERCADO")
     private String logo;
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mercado", cascade = CascadeType.ALL)
     private List<Produto> produtos;
 
     public List<Produto> getProdutos() {

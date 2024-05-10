@@ -1,6 +1,6 @@
 package com.br.buscador.produto.entity;
 
-import com.br.buscador.categorias.entity.CategoriasDTO;
+
 import com.br.buscador.mercado.entity.MercadoDTO;
 
 public class ProdutoDTO {
@@ -9,8 +9,17 @@ public class ProdutoDTO {
     private String nomeProduto;
     private MercadoDTO mercado;
     private Double precoProduto;
-    private CategoriasDTO categoria;
+    private String unidadeMedida;
+    private String categoria;
     private String imagem;
+
+    public String getUnidadeMedida() {
+        return unidadeMedida;
+    }
+
+    public void setUnidadeMedida(String unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
+    }
 
     public Integer getId() {
         return id;
@@ -44,11 +53,11 @@ public class ProdutoDTO {
         this.precoProduto = precoProduto;
     }
 
-    public CategoriasDTO getCategoria() {
+    public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(CategoriasDTO categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 
