@@ -14,6 +14,7 @@ public interface MercadoMapper {
 
     List<Mercado> paraListaDeEntidades(List<MercadoDTO> mercadoDTOS);
 
+    @Mapping(target = "produtos", ignore = true)
     MercadoDTO paraDTO(Mercado mercado);
 
     List<MercadoDTO> paraListaDeDTOs(List<Mercado> mercados);

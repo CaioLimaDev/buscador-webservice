@@ -20,8 +20,6 @@ public class ProdutoServiceImpl implements ProdutoService{
     ProdutoRepository produtoRepository;
     @Inject
     ProdutoMapper produtoMapper;
-    @Inject
-    MercadoMapper mercadoMapper;
 
     @Override
     public Paginado<ProdutoDTO> buscarProdutosFiltrados(ProdutoFilter produtoFilter) {
