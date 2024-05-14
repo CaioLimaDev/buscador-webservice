@@ -2,6 +2,7 @@ package com.br.buscador.mercado.services;
 
 import com.br.buscador.mercado.entity.Mercado;
 import com.br.buscador.mercado.entity.MercadoDTO;
+import com.br.buscador.mercado.entity.MercadoMapper;
 import com.br.buscador.mercado.repository.MercadoRepository;
 import com.br.buscador.produto.entity.ProdutoDTO;
 import com.br.buscador.util.leitura.LeitorDeCsv;
@@ -23,6 +24,8 @@ public class MercadoServiceImpl implements MercadoService{
 
     @Inject
     MercadoRepository mercadoRepository;
+    @Inject
+    MercadoMapper mercadoMapper;
 
     @Override
     @Transactional
@@ -34,14 +37,17 @@ public class MercadoServiceImpl implements MercadoService{
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withDelimiter(';'));
             LeitorDeCsv leitorDeCsv = new LeitorDeCsv();
             Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap = leitorDeCsv.lerCsv(csvParser);
-            List<Mercado> mercados = leitorDeCsv.criarMercados(mercadoProdutoMap);
+            Mercado mercado = leitorDeCsv.criarMercados(mercadoProdutoMap);
+            mercadoRepository.persist(mercado);
 
-            for (Mercado mercado : mercados){
-                mercadoRepository.persist(mercado);
-            }
             return Response.ok().build();
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Override
+    public Response buscarMercados() {
+        return Response.ok(mercadoRepository.listAll()).build();
     }
 }

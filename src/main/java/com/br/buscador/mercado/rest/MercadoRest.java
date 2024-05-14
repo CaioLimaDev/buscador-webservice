@@ -3,6 +3,7 @@ package com.br.buscador.mercado.rest;
 import com.br.buscador.mercado.services.MercadoService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
@@ -33,5 +34,11 @@ public class MercadoRest {
         });
 
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/")
+    public Response buscarMercados(){
+        return mercadoService.buscarMercados();
     }
 }

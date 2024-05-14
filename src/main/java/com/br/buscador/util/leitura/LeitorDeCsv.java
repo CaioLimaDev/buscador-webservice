@@ -22,6 +22,7 @@ public class LeitorDeCsv {
             produtoDTO.setPrecoProduto(Double.parseDouble(record.get("preco")));
             produtoDTO.setUnidadeMedida(record.get("unidadeMedida"));
             produtoDTO.setImagem(record.get("imagemProduto"));
+            produtoDTO.setCategoria(record.get("categoria"));
 
             MercadoDTO mercadoDTO = new MercadoDTO();
             mercadoDTO.setLogo(record.get("imagemMercado"));
@@ -36,16 +37,19 @@ public class LeitorDeCsv {
         return mercadoProdutoMap;
     }
 
-    public List<Mercado> criarMercados(Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap) {
-        List<Mercado> mercados = new ArrayList<>();
+    public Mercado criarMercados(Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap) {
+
+        Mercado mercado = new Mercado();
+
+        List<Produto> produtos = new ArrayList<>();
+
         for (Map.Entry<MercadoDTO, List<ProdutoDTO>> entry : mercadoProdutoMap.entrySet()) {
-            Mercado mercado = new Mercado();
             MercadoDTO mercadoDTO = entry.getKey();
             mercado.setNome(mercadoDTO.getNome());
             mercado.setLogo(mercadoDTO.getLogo());
 
             List<ProdutoDTO> produtoDTOList = entry.getValue();
-            List<Produto> produtos = new ArrayList<>();
+
 
             for (ProdutoDTO produtoDTO : produtoDTOList) {
                 Produto produto = new Produto();
@@ -57,8 +61,7 @@ public class LeitorDeCsv {
                 produtos.add(produto);
             }
             mercado.setProdutos(produtos);
-            mercados.add(mercado);
         }
-        return mercados;
+        return mercado;
     }
 }

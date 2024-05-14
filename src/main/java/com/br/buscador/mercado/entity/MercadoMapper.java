@@ -13,4 +13,6 @@ public interface MercadoMapper {
     List<Mercado> paraListaDeEntidades(List<MercadoDTO> mercadoDTOS);
 
     MercadoDTO paraDTO(Mercado mercado);
+
+    List<MercadoDTO> paraListaDeDTOs(List<Mercado> mercados);
 }
