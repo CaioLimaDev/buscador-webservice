@@ -22,11 +22,11 @@ public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer>
 
     public Paginado<Produto> filtrarProdutos(ProdutoFilter produtoFilter){
         StringJoiner query = new StringJoiner(" ");
-        query.add("FROM Produtos p WHERE");
+        query.add("FROM Produto p WHERE");
         query.add("(:nomeProduto IS NULL OR p.nomeProduto = :nomeProduto)");
         query.add("AND (:mercado IS NULL OR p.mercado.nome LIKE '%:mercado%')");
         query.add("AND (:precoProduto IS NULL OR p.precoProduto = :precoProduto)");
-        query.add("AND (:categoria IS NULL OR p.categoria.descricao = '%:categoria%')");
+        query.add("AND (:categoria IS NULL OR p.categoria = '%:categoria%')");
 
         Map<String,Object> parametros = new HashMap<>();
         parametros.put("nomeProduto", produtoFilter.getNomeProduto());

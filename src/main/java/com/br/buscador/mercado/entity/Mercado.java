@@ -1,6 +1,7 @@
 package com.br.buscador.mercado.entity;
 
 import com.br.buscador.produto.entity.Produto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
@@ -19,6 +20,7 @@ public class Mercado extends PanacheEntityBase {
     @Column(name = "LOGO_MERCADO")
     private String logo;
     @OneToMany(mappedBy = "mercado", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Produto> produtos;
 
     public List<Produto> getProdutos() {

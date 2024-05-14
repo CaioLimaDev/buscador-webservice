@@ -4,13 +4,12 @@ import com.br.buscador.mercado.entity.Mercado;
 import com.br.buscador.mercado.entity.MercadoDTO;
 import com.br.buscador.produto.entity.Produto;
 import com.br.buscador.produto.entity.ProdutoDTO;
+import com.br.buscador.produto.entity.ProdutoMapper;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class LeitorDeCsv {
 
@@ -19,7 +18,7 @@ public class LeitorDeCsv {
         for (CSVRecord record : csvParser) {
             ProdutoDTO produtoDTO = new ProdutoDTO();
             produtoDTO.setNomeProduto(record.get("nome"));
-            produtoDTO.setPrecoProduto(Double.parseDouble(record.get("preco")));
+            produtoDTO.setPrecoProduto(formatarPrecoProduto(record.get("preco")));
             produtoDTO.setUnidadeMedida(record.get("unidadeMedida"));
             produtoDTO.setImagem(record.get("imagemProduto"));
             produtoDTO.setCategoria(record.get("categoria"));
@@ -37,7 +36,7 @@ public class LeitorDeCsv {
         return mercadoProdutoMap;
     }
 
-    public Mercado criarMercados(Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap) {
+    public Mercado criarMercados(Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap, ProdutoMapper produtoMapper) {
 
         Mercado mercado = new Mercado();
 
@@ -50,18 +49,29 @@ public class LeitorDeCsv {
 
             List<ProdutoDTO> produtoDTOList = entry.getValue();
 
-
             for (ProdutoDTO produtoDTO : produtoDTOList) {
-                Produto produto = new Produto();
-                produto.setNomeProduto(produtoDTO.getNomeProduto());
-                produto.setPrecoProduto(produtoDTO.getPrecoProduto());
-                produto.setImagem(produtoDTO.getImagem());
-                produto.setCategoria(produtoDTO.getCategoria());
+                Produto produto = produtoMapper.paraEntidade(produtoDTO);
                 produto.setMercado(mercado);
                 produtos.add(produto);
             }
             mercado.setProdutos(produtos);
         }
         return mercado;
+    }
+
+    private Double formatarPrecoProduto(String record){
+
+        if (record.length() <= 6) {
+            return Double.parseDouble(record);
+        } else {
+            String[] partes = record.split("\\.");
+            if (partes.length > 2) {
+                String valor = String.join("", Arrays.copyOf(partes, partes.length - 1)) + "." + partes[partes.length - 1];
+                return Double.parseDouble(valor);
+            } else {
+                return Double.parseDouble(record);
+            }
+        }
+
     }
 }

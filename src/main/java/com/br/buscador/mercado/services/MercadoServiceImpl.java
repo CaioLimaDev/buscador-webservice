@@ -5,6 +5,7 @@ import com.br.buscador.mercado.entity.MercadoDTO;
 import com.br.buscador.mercado.entity.MercadoMapper;
 import com.br.buscador.mercado.repository.MercadoRepository;
 import com.br.buscador.produto.entity.ProdutoDTO;
+import com.br.buscador.produto.entity.ProdutoMapper;
 import com.br.buscador.util.leitura.LeitorDeCsv;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,21 +26,25 @@ public class MercadoServiceImpl implements MercadoService{
     @Inject
     MercadoRepository mercadoRepository;
     @Inject
-    MercadoMapper mercadoMapper;
+    ProdutoMapper produtoMapper;
 
     @Override
     @Transactional
     public Response salvarMercadosEProdutos(FileUpload fileUpload) throws IOException {
-        try {
+        try{
             InputStream inputStream = new FileInputStream(fileUpload.uploadedFile().toString());
 
             Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withDelimiter(';'));
+
             LeitorDeCsv leitorDeCsv = new LeitorDeCsv();
             Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap = leitorDeCsv.lerCsv(csvParser);
-            Mercado mercado = leitorDeCsv.criarMercados(mercadoProdutoMap);
-            mercadoRepository.persist(mercado);
 
+            Mercado mercado = leitorDeCsv.criarMercados(mercadoProdutoMap,produtoMapper);
+
+            mercadoRepository.validarESalvarMercado(mercado);
+
+            inputStream.close();
             return Response.ok().build();
         } catch (Exception e) {
             throw e;

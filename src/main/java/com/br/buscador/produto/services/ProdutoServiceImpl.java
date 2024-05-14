@@ -27,7 +27,7 @@ public class ProdutoServiceImpl implements ProdutoService{
     public Paginado<ProdutoDTO> buscarProdutosFiltrados(ProdutoFilter produtoFilter) {
         Paginado<Produto> produtos = produtoRepository.filtrarProdutos(produtoFilter);
         return Paginado.from(produtos, produtos.result.stream()
-                .map(produto -> produtoMapper.paraDTO(produto,mercadoMapper))
+                .map(produto -> produtoMapper.paraDTO(produto))
                 .collect(Collectors.toList()));
     }
 }

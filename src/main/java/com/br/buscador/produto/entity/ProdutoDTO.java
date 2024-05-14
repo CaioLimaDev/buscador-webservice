@@ -2,11 +2,16 @@ package com.br.buscador.produto.entity;
 
 
 import com.br.buscador.mercado.entity.MercadoDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 public class ProdutoDTO {
 
     private Integer id;
     private String nomeProduto;
+    @JsonIgnore
+    @JsonSerialize(using = ToStringSerializer.class)
     private MercadoDTO mercado;
     private Double precoProduto;
     private String unidadeMedida;

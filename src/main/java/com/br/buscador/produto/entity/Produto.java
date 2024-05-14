@@ -2,6 +2,10 @@ package com.br.buscador.produto.entity;
 
 
 import com.br.buscador.mercado.entity.Mercado;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
@@ -17,6 +21,8 @@ public class Produto extends PanacheEntityBase {
     private String nomeProduto;
     @ManyToOne
     @JoinColumn(name = "MERCADO", nullable = false)
+    @JsonBackReference
+    @JsonSerialize(using = ToStringSerializer.class)
     private Mercado mercado;
     @Column(name = "PRECO_PRODUTO")
     private Double precoProduto;
