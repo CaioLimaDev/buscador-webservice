@@ -19,20 +19,19 @@ import java.util.StringJoiner;
 @ApplicationScoped
 public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer> {
 
-
     public Paginado<Produto> filtrarProdutos(ProdutoFilter produtoFilter){
         StringJoiner query = new StringJoiner(" ");
-        query.add("FROM Produto p WHERE");
-        query.add("(:nomeProduto IS NULL OR p.nomeProduto = :nomeProduto)");
-        query.add("AND (:mercado IS NULL OR p.mercado.nome LIKE '%:mercado%')");
-        query.add("AND (:precoProduto IS NULL OR p.precoProduto = :precoProduto)");
-        query.add("AND (:categoria IS NULL OR p.categoria = '%:categoria%')");
+        query.add("(LOWER(:nomeProduto) IS NULL OR LOWER(nomeProduto) LIKE LOWER(:nomeProduto))");
+        query.add("AND (LOWER(:mercado) IS NULL OR LOWER(mercado.nome) LIKE LOWER(:mercado))");
+        query.add("AND (:precoProduto IS NULL OR precoProduto = :precoProduto)");
+        query.add("AND (LOWER(:categoria) IS NULL OR LOWER(categoria) LIKE LOWER(:categoria))");
 
         Map<String,Object> parametros = new HashMap<>();
-        parametros.put("nomeProduto", produtoFilter.getNomeProduto());
-        parametros.put("mercado", produtoFilter.getMercado());
+        parametros.put("nomeProduto", produtoFilter.getNomeProduto() != null ? "%" + produtoFilter.getNomeProduto() + "%" : null);
+        parametros.put("mercado", produtoFilter.getMercado() != null ? "%" + produtoFilter.getMercado() + "%" : null);
         parametros.put("precoProduto", produtoFilter.getPrecoProduto());
-        parametros.put("categoria", produtoFilter.getCategoria());
+        parametros.put("categoria", produtoFilter.getCategoria() != null ? "%" + produtoFilter.getCategoria() + "%" : null);
+
 
         Page page = new Page(produtoFilter.page, produtoFilter.pageSize);
         PanacheQuery<Produto> produtos = find(query.toString(), parametros);

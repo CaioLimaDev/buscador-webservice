@@ -7,6 +7,7 @@ import com.br.buscador.mercado.repository.MercadoRepository;
 import com.br.buscador.produto.entity.ProdutoDTO;
 import com.br.buscador.produto.entity.ProdutoMapper;
 import com.br.buscador.util.leitura.LeitorDeCsv;
+import com.br.buscador.util.pagination.Paginado;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MercadoServiceImpl implements MercadoService{
@@ -27,6 +29,8 @@ public class MercadoServiceImpl implements MercadoService{
     MercadoRepository mercadoRepository;
     @Inject
     ProdutoMapper produtoMapper;
+    @Inject
+    MercadoMapper mercadoMapper;
 
     @Override
     @Transactional
@@ -52,7 +56,10 @@ public class MercadoServiceImpl implements MercadoService{
     }
 
     @Override
-    public Response buscarMercados() {
-        return Response.ok(mercadoRepository.listAll()).build();
+    public Paginado<MercadoDTO> buscarMercados() {
+        Paginado<Mercado> mercados = mercadoRepository.buscarMercadosPaginado();
+        return Paginado.from(mercados, mercados.result.stream()
+                .map(mercado -> mercadoMapper.paraDTO(mercado))
+                .collect(Collectors.toList()));
     }
 }

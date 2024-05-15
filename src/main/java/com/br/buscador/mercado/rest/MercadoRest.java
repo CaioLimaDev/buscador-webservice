@@ -1,11 +1,10 @@
 package com.br.buscador.mercado.rest;
 
+import com.br.buscador.mercado.entity.MercadoDTO;
 import com.br.buscador.mercado.services.MercadoService;
+import com.br.buscador.util.pagination.Paginado;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestForm;
@@ -36,9 +35,16 @@ public class MercadoRest {
         return Response.ok().build();
     }
 
+
     @GET
     @Path("/")
     public Response buscarMercados(){
-        return mercadoService.buscarMercados();
+        Paginado<MercadoDTO> mercados = mercadoService.buscarMercados();
+        if (mercados.result.isEmpty()){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"mensagem\":\"Não foi possível encontrar mercados\"}")
+                    .build();
+        }
+        return Response.ok(mercados).build();
     }
 }
