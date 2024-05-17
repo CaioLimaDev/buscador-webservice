@@ -11,6 +11,7 @@ import com.br.buscador.util.pagination.Paginado;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -27,5 +28,15 @@ public class ProdutoServiceImpl implements ProdutoService{
         return Paginado.from(produtos, produtos.result.stream()
                 .map(produto -> produtoMapper.paraDTO(produto))
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<String> buscarCategoriasProdutos() {
+        return produtoRepository.buscarCategoriasExistentes();
+    }
+
+    @Override
+    public ProdutoDTO buscarProdutoPorId(Integer id) {
+        return produtoMapper.paraDTO(produtoRepository.findById(id));
     }
 }

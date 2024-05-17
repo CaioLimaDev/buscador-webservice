@@ -8,7 +8,10 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
 
 @Path("/produtos")
 public class ProdutoRest {
@@ -26,5 +29,17 @@ public class ProdutoRest {
                     .build();
         }
         return Response.ok(produtos).build();
+    }
+
+    @GET
+    @Path("/categorias")
+    public List<String> buscarCategoriasProdutos(){
+        return produtoService.buscarCategoriasProdutos();
+    }
+
+    @GET
+    @Path("/id/{id}")
+    public Response buscarProdutoPorId(@PathParam("id") Integer id){
+        return Response.ok(produtoService.buscarProdutoPorId(id)).build();
     }
 }
