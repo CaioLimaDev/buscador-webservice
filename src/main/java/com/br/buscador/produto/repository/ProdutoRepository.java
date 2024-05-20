@@ -28,16 +28,26 @@ public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer>
 
     public Paginado<Produto> filtrarProdutos(ProdutoFilter produtoFilter){
         StringJoiner query = new StringJoiner(" ");
+
         query.add("(LOWER(:nomeProduto) IS NULL OR LOWER(nomeProduto) LIKE LOWER(:nomeProduto))");
-        query.add("AND ((:mercado) IS NULL OR (mercado.nome) IN (:mercado))");
         query.add("AND (:precoProduto IS NULL OR precoProduto = :precoProduto)");
-        query.add("AND ((:categoria) IS NULL OR (categoria) IN (:categoria))");
+
+        if (produtoFilter.getMercado() != null && !produtoFilter.getMercado().isEmpty()) {
+            query.add("AND (mercado.nome IN (:mercado))");
+        } else {
+            query.add("AND (:mercado) IS NULL");
+        }
+        if (produtoFilter.getCategoria() != null && !produtoFilter.getCategoria().isEmpty()) {
+            query.add("AND (categoria IN (:categoria))");
+        } else {
+            query.add("AND (:categoria) IS NULL");
+        }
 
         Map<String,Object> parametros = new HashMap<>();
         parametros.put("nomeProduto", produtoFilter.getNomeProduto() != null ? "%" + produtoFilter.getNomeProduto() + "%" : null);
-        parametros.put("mercado", produtoFilter.getMercado() != null ? produtoFilter.getMercado() : null);
+        parametros.put("mercado", produtoFilter.getMercado() != null && !produtoFilter.getMercado().isEmpty() ? produtoFilter.getMercado() : null);
         parametros.put("precoProduto", produtoFilter.getPrecoProduto());
-        parametros.put("categoria", produtoFilter.getCategoria() != null ? produtoFilter.getCategoria() : null);
+        parametros.put("categoria", produtoFilter.getCategoria() != null && !produtoFilter.getCategoria().isEmpty() ? produtoFilter.getCategoria() : null);
 
 
         Page page = new Page(produtoFilter.page, produtoFilter.pageSize);
