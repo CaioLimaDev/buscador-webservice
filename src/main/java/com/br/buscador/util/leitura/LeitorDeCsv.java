@@ -14,13 +14,22 @@ import java.util.*;
 public class LeitorDeCsv {
 
     public Map<MercadoDTO, List<ProdutoDTO>> lerCsv(CSVParser csvParser) {
+
         Map<MercadoDTO, List<ProdutoDTO>> mercadoProdutoMap = new HashMap<>();
+        String placeholderImagem = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
         for (CSVRecord record : csvParser) {
             ProdutoDTO produtoDTO = new ProdutoDTO();
             produtoDTO.setNomeProduto(record.get("nome"));
             produtoDTO.setPrecoProduto(formatarPrecoProduto(record.get("preco")));
             produtoDTO.setUnidadeMedida(record.get("unidadeMedida"));
-            produtoDTO.setImagem(record.get("imagemProduto"));
+
+            if (record.get("imagemProduto").equals(placeholderImagem)){
+                produtoDTO.setImagem("Produto Sem imagem");
+            } else {
+                produtoDTO.setImagem(record.get("imagemProduto"));
+            }
+
             produtoDTO.setCategoria(record.get("categoria"));
 
             MercadoDTO mercadoDTO = new MercadoDTO();
