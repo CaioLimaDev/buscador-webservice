@@ -30,7 +30,7 @@ public class ProdutoRepository implements PanacheRepositoryBase<Produto,Integer>
         StringJoiner query = new StringJoiner(" ");
 
         query.add("(LOWER(:nomeProduto) IS NULL OR LOWER(nomeProduto) LIKE LOWER(:nomeProduto))");
-        query.add("AND (:precoProduto IS NULL OR precoProduto = :precoProduto)");
+        query.add("AND (:precoProduto IS NULL OR precoProduto <= :precoProduto)");
 
         if (produtoFilter.getMercado() != null && !produtoFilter.getMercado().isEmpty()) {
             query.add("AND (mercado.nome IN (:mercado))");
