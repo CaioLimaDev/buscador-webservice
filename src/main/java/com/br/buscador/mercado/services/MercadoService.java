@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface MercadoService {
+
     Response salvarMercadosEProdutos(FileUpload fileUpload) throws IOException;
+
     Paginado<MercadoDTO> buscarMercados();
+
+    MercadoDTO buscarMercadoPorId(Integer id);
 
 }

@@ -5,6 +5,7 @@ import com.br.buscador.mercado.entity.MercadoDTO;
 import com.br.buscador.util.pagination.Paginado;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @ApplicationScoped
-public class MercadoRepository implements PanacheRepository<Mercado> {
+public class MercadoRepository implements PanacheRepositoryBase<Mercado, Integer> {
 
     public void validarESalvarMercado(Mercado mercado) {
         Mercado mercadoExistente = Mercado.find("nome", mercado.getNome()).firstResult();

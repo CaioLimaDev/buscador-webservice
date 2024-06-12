@@ -47,4 +47,11 @@ public class MercadoRest {
         }
         return Response.ok(mercados).build();
     }
+
+    @GET
+    @Path("/id/{id}")
+    public Response buscarMercadoPorId(@PathParam("id") Integer id){
+        MercadoDTO mercado = mercadoService.buscarMercadoPorId(id);
+        return Response.ok(mercado).build();
+    }
 }

@@ -62,4 +62,9 @@ public class MercadoServiceImpl implements MercadoService{
                 .map(mercado -> mercadoMapper.paraDTO(mercado))
                 .collect(Collectors.toList()));
     }
+
+    @Override
+    public MercadoDTO buscarMercadoPorId(Integer id) {
+        return mercadoMapper.paraDTO(mercadoRepository.findById(id));
+    }
 }
